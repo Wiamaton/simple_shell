@@ -201,9 +201,8 @@ void free_information(info_t *, int);
 /* Environmental variables */
 char *get_environment(info_t *, const char *);
 int custom_env(info_t *);
-int custom_setenv(info_t *);
-int custom_unsetenv(info_t *);
-int populate_environment_list(info_t *);
+int custom_setenv(info_t *, char *, char *);
+int custom_unsetenv(info_t *, char *);
 
 /* Getting environment variables */
 char **get_environment_variables(info_t *);
