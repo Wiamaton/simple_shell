@@ -29,7 +29,7 @@ size_t list_length(const list_t *head)
 char **list_to_strings(list_t *head)
 {
 	list_t *node = head;
-	size_t size = list_length(head), i;
+	size_t size = list_length(head), i, j;
 	char **strings_array;
 	char *str;
 
@@ -42,16 +42,16 @@ char **list_to_strings(list_t *head)
 
 	for (i = 0; node; node = node->next, i++)
 	{
-		str = malloc(_strlen(node->str) + 1);
+		str = malloc(str_length(node->str) + 1);
 		if (!str)
 		{
-			for (size_t j = 0; j < i; j++)
+			for (j = 0; j < i; j++)
 				free(strings_array[j]);
 			free(strings_array);
 			return (NULL);
 		}
 
-		str = _strcpy(str, node->str);
+		str = copy_string(str, node->str);
 		strings_array[i] = str;
 	}
 	strings_array[i] = NULL;
@@ -70,11 +70,11 @@ size_t print_list(const list_t *head)
 
 	while (head)
 	{
-		_puts(convert_number(head->num, 10, 0));
-		_putchar(':');
-		_putchar(' ');
-		_puts(head->str ? head->str : "(nil)");
-		_puts("\n");
+		print_string(convert_number_to_string(head->num, 10, 0));
+		write_character(':');
+		write_character(' ');
+		print_string(head->str ? head->str : "(nil)");
+		print_string("\n");
 		head = head->next;
 		size++;
 	}
@@ -96,7 +96,7 @@ list_t *find_node_starts_with(list_t *head, char *prefix, char c)
 
 	while (head)
 	{
-		p = starts_with(head->str, prefix);
+		p = str_starts_with(head->str, prefix);
 		if (p && ((c == -1) || (*p == c)))
 			return (head);
 		head = head->next;

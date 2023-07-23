@@ -18,8 +18,8 @@ int _myexit(info_t *info)
 		{
 			info->status = 2;
 			print_error(info, "Illegal number: ");
-			_eputs(info->argv[1]);
-			_eputchar('\n');
+			print_string(info->argv[1]);
+			write_character('\n');
 			return (1);
 		}
 		info->err_num = _erratoi(info->argv[1]);
@@ -42,38 +42,38 @@ int _mycd(info_t *info)
 
 	s = getcwd(buffer, 1024);
 	if (!s)
-		_puts("TODO: >>getcwd failure emsg here<<\n");
+		print_string("TODO: >>getcwd failure emsg here<<\n");
 	if (!info->argv[1])
 	{
-		dir = _getenv(info, "HOME=");
+		dir = get_environment_variable(info, "HOME=");
 		if (!dir)
 			chdir_ret = /* TODO: Decide what the default directory should be */
-				chdir((dir = _getenv(info, "PWD=")) ? dir : "/");
+				chdir((dir = get_environment_variable(info, "PWD=")) ? dir : "/");
 		else
 			chdir_ret = chdir(dir);
 	}
-	else if (_strcmp(info->argv[1], "-") == 0)
+	else if (str_compare(info->argv[1], "-") == 0)
 	{
-		if (!_getenv(info, "OLDPWD="))
+		if (!get_environment_variable(info, "OLDPWD="))
 		{
-			_puts(s);
-			_putchar('\n');
+			print_string(s);
+			write_character('\n');
 			return (1);
 		}
-		_puts(_getenv(info, "OLDPWD=")), _putchar('\n');
+		print_string(get_environment_variable(info, "OLDPWD=")), write_character('\n');
 		chdir_ret = /* TODO: Decide what the default directory should be */
-			chdir((dir = _getenv(info, "OLDPWD=")) ? dir : "/");
+			chdir((dir = get_environment_variable(info, "OLDPWD=")) ? dir : "/");
 	}
 	else
 		chdir_ret = chdir(info->argv[1]);
 	if (chdir_ret == -1)
 	{
 		print_error(info, "can't cd to ");
-		_eputs(info->argv[1]), _eputchar('\n');
+		print_string(info->argv[1]), write_character('\n');
 	}
 	else
 	{
-		_setenv(info, "OLDPWD", _getenv(info, "PWD="));
+		_setenv(info, "OLDPWD", get_environment_variable(info, "PWD="));
 		_setenv(info, "PWD", getcwd(buffer, 1024));
 	}
 	return (0);
@@ -90,8 +90,8 @@ int _myhelp(info_t *info)
 	char **arg_array;
 
 	arg_array = info->argv;
-	_puts("help call works. Function not yet implemented \n");
+	print_string("help call works. Function not yet implemented \n");
 	if (0)
-		_puts(*arg_array); /* temp att_unused workaround */
+		print_string(*arg_array); /* temp att_unused workaround */
 	return (0);
 }

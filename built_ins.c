@@ -31,7 +31,7 @@ int unset_alias(info_t *info, char *str)
 	temp = *equal_sign;
 	*equal_sign = '\0';
 	ret = delete_node_at_index(&(info->alias),
-		get_node_index(info->alias, node_starts_with(info->alias, str, -1)));
+		get_node_index(info->alias, find_node_starts_with(info->alias, str, -1)));
 	*equal_sign = temp;
 	return (ret);
 }
@@ -109,7 +109,7 @@ int manage_alias(info_t *info)
 		if (equal_sign)
 			set_alias(info, info->argv[i]);
 		else
-			print_alias(node_starts_with(info->alias, info->argv[i], '='));
+			print_alias(find_node_starts_with(info->alias, info->argv[i], '='));
 	}
 
 	return (0);

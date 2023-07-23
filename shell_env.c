@@ -27,7 +27,7 @@ char *get_environment_variable(info_t *info, const char *name)
 
 	while (node)
 	{
-		p = node_starts_with(node->str, name);
+		p = str_starts_with(node->str, name);
 		if (p && *p)
 			return (p);
 		node = node->next;
@@ -46,10 +46,10 @@ int set_environment_variable(info_t *info)
 {
 	if (info->argc != 3)
 	{
-		eputs("Incorrect number of arguments.\n");
+		print_string("Incorrect number of arguments.\n");
 		return (1);
 	}
-	if (setenv(info, info->argv[1], info->argv[2]))
+	if (_setenv(info, info->argv[1], info->argv[2]))
 		return (0);
 	return (1);
 }

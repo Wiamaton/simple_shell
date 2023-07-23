@@ -26,18 +26,18 @@ int start_program(int argc, char **argv)
 				exit(126);
 			if (errno == ENOENT)
 			{
-				_eputs(argv[0]);
-				_eputs(": 0: Failed to open ");
-				_eputs(argv[1]);
-				_eputchar('\n');
-				_eputchar(BUF_FLUSH);
+				print_string(argv[0]);
+				print_string(": 0: Failed to open ");
+				print_string(argv[1]);
+				write_character('\n');
+				write_character(BUF_FLUSH);
 				exit(127);
 			}
 			return (EXIT_FAILURE);
 		}
 		info->readfd = fd;
 	}
-	populate_env_list(info);
+	populate_environment_list(info);
 	read_history(info);
 	hsh(info, argv);
 	return (EXIT_SUCCESS);

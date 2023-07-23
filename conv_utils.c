@@ -36,13 +36,13 @@ int convert_string_to_integer(char *s)
  */
 void print_error_message(info_t *info, char *error_type)
 {
-	_eputs(info->fname);
-	_eputs(": ");
+	print_string(info->fname);
+	print_string(": ");
 	print_decimal(info->line_count, STDERR_FILENO);
-	_eputs(": ");
-	_eputs(info->argv[0]);
-	_eputs(": ");
-	_eputs(error_type);
+	print_string(": ");
+	print_string(info->argv[0]);
+	print_string(": ");
+	print_string(error_type);
 }
 
 /**
@@ -54,12 +54,12 @@ void print_error_message(info_t *info, char *error_type)
  */
 int print_decimal(int input, int fd)
 {
-	int (*put_char_func)(char) = _putchar;
+	int (*put_char_func)(char) = write_character;
 	int i, count = 0;
 	unsigned int absolute_value, current;
 
 	if (fd == STDERR_FILENO)
-		put_char_func = _eputchar;
+		put_char_func = write_character;
 	if (input < 0)
 	{
 		absolute_value = -input;

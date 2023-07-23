@@ -21,7 +21,7 @@ ssize_t buffer_input(info_t *info, char **buf, size_t *len)
 #if USE_GETLINE
 		bytes_read = getline(buf, &len_p, stdin);
 #else
-		bytes_read = _getline(info, buf, &len_p);
+		bytes_read = buffer_input(info, buf, &len_p);
 #endif
 		if (bytes_read > 0)
 		{
@@ -31,7 +31,7 @@ ssize_t buffer_input(info_t *info, char **buf, size_t *len)
 				bytes_read--;
 			}
 			info->linecount_flag = 1;
-			remove_comments(*buf);
+			remove_comments_from_string(*buf);
 			build_history_list(info, *buf, info->histcount++);
 			/* Check if it is a command chain using _strchr(*buf, ';'). */
 			{
@@ -57,7 +57,7 @@ ssize_t get_user_input(info_t *info)
 	ssize_t bytes_read = 0;
 	char **buf_p = &(info->arg), *p;
 
-	_putchar(BUF_FLUSH);
+	write_character(BUF_FLUSH);
 	bytes_read = buffer_input(info, &buf, &len);
 	if (bytes_read == -1) /* EOF */
 		return (-1);
@@ -82,7 +82,7 @@ ssize_t get_user_input(info_t *info)
 		}
 
 		*buf_p = p; /* Pass back a pointer to the current command position. */
-		return (_strlen(p)); /* Return the length of the current command. */
+		return (str_length(p)); /* Return the length of the current command. */
 	}
 
 	*buf_p = buf; /* Not a chain, pass back buffer from _getline(). */
@@ -135,7 +135,7 @@ int _getline(info_t *info, char **ptr, size_t *length)
 	if (bytes_read == -1 || (bytes_read == 0 && len == 0))
 		return (-1);
 
-	c = _strchr(buf + i, '\n');
+	c = my_strchr(buf + i, '\n');
 	k = c ? 1 + (unsigned int)(c - buf) : len;
 	new_p = _realloc
 		(p, characters_read, characters_read ? characters_read + k : k + 1);
@@ -143,9 +143,9 @@ int _getline(info_t *info, char **ptr, size_t *length)
 		return (p ? (free(p), -1) : -1);
 
 	if (characters_read)
-		_strncat(new_p, buf + i, k - i);
+		my_strncat(new_p, buf + i, k - i);
 	else
-		_strncpy(new_p, buf + i, k - i + 1);
+		my_strncpy(new_p, buf + i, k - i + 1);
 
 	characters_read += k - i;
 	i = k;
@@ -165,7 +165,7 @@ int _getline(info_t *info, char **ptr, size_t *length)
  */
 void sigintHandler(__attribute__((unused)) int sig_num)
 {
-	_puts("\n");
-	_puts("$ ");
-	_putchar(BUF_FLUSH);
+	print_string("\n");
+	print_string("$ ");
+	write_character(BUF_FLUSH);
 }
