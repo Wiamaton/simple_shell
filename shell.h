@@ -74,6 +74,11 @@ typedef struct passinfo
         int histcount;
 } info_t;
 
+#define INFO_INIT \
+{ \
+    NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
+    0, 0, 0 \
+}
 /* Builtin command struct */
 typedef struct builtin
 {
@@ -153,10 +158,15 @@ int _myhelp(info_t *);
 
 /* toem_builtin1.c */
 int display_history(info_t *);
-int builtin_alias(info_t *);
+int unset_alias(info_t *, char *);
+int set_alias(info_t *, char *);
+int print_alias(list_t *);
+int manage_alias(info_t *);
 
 /*toem_getline.c */
 ssize_t get_user_input(info_t *);
+ssize_t read_buffer(info_t *, char *, size_t *);
+int _getline(info_t *, char **, size_t *);
 ssize_t buffer_input(info_t *, char **, size_t *);
 void sigintHandler(int);
 

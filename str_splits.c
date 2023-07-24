@@ -21,8 +21,8 @@ char **split_string(char *str, char *delimiter)
 
 	for (i = 0; str[i] != '\0'; i++)
 	{
-		if (!is_delimiter(str[i], delimiter) &&
-			(is_delimiter(str[i + 1], delimiter) || !str[i + 1]))
+		if (!check_delimiter(str[i], delimiter) &&
+			(check_delimiter(str[i + 1], delimiter) || !str[i + 1]))
 			num_words++;
 	}
 
@@ -35,11 +35,11 @@ char **split_string(char *str, char *delimiter)
 
 	for (i = 0, j = 0; j < num_words; j++)
 	{
-		while (is_delimiter(str[i], delimiter))
+		while (check_delimiter(str[i], delimiter))
 			i++;
 
 		k = 0;
-		while (!is_delimiter(str[i + k], delimiter) && str[i + k])
+		while (!check_delimiter(str[i + k], delimiter) && str[i + k])
 			k++;
 
 		words[j] = malloc((k + 1) * sizeof(char));

@@ -25,13 +25,13 @@ void set_info(info_t *info, char **av)
 	info->fname = av[0];
 	if (info->arg)
 	{
-		info->argv = strtow(info->arg, " \t");
+		info->argv = split_string(info->arg, " \t");
 		if (!info->argv)
 		{
 			info->argv = malloc(sizeof(char *) * 2);
 			if (info->argv)
 			{
-				info->argv[0] = _strdup(info->arg);
+				info->argv[0] = duplicate_string(info->arg);
 				info->argv[1] = NULL;
 			}
 		}
@@ -69,6 +69,6 @@ void free_info(info_t *info, int all)
 		bfree((void **)info->cmd_buf);
 		if (info->readfd > 2)
 			close(info->readfd);
-		_putchar(BUF_FLUSH);
+		write_character(BUF_FLUSH);
 	}
 }

@@ -17,11 +17,11 @@ int hsh(info_t *info, char **av)
 
 	while (r != -1 && builtin_ret != -2)
 	{
-		clear_info(info);
+		initialize_info(info);
 		if (check_interactive(info))
 			print_string("$ ");
 		write_character(BUF_FLUSH);
-		r = get_input(info);
+		r = get_user_input(info);
 		if (r != -1)
 		{
 			set_info(info, av);
@@ -63,18 +63,18 @@ int find_builtin(info_t *info)
 	int i, built_in_ret = -1;
 	builtin_table builtintbl[] = {
 		{"exit", _myexit},
-		{"env", _myenv},
+		{"env", print_environment},
 		{"help", _myhelp},
-		{"history", _myhistory},
-		{"setenv", _setenv},
-		{"unsetenv", _unsetenv},
+		{"history", display_history},
+		{"setenv", set_environment_variable},
+		{"unsetenv", unset_environment_variable},
 		{"cd", _mycd},
-		{"alias", _myalias},
+		{"alias", manage_alias},
 		{NULL, NULL}
 	};
 
 	for (i = 0; builtintbl[i].type; i++)
-		if (_strcmp(info->argv[0], builtintbl[i].type) == 0)
+		if (str_compare(info->argv[0], builtintbl[i].type) == 0)
 		{
 			info->line_count++;
 			built_in_ret = builtintbl[i].func(info);
@@ -104,12 +104,12 @@ void find_cmd(info_t *info)
 		info->linecount_flag = 0;
 	}
 	for (i = 0, k = 0; info->arg[i]; i++)
-		if (!is_delim(info->arg[i], " \t\n"))
+		if (!check_delimiter(info->arg[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = find_path(info, get_environment_variable(info, "PATH="), info->argv[0]);
+	path = find_cmd_in_path(info, get_environment_variable(info, "PATH="), info->argv[0]);
 	if (path)
 	{
 		info->path = path;
@@ -118,7 +118,7 @@ void find_cmd(info_t *info)
 	else
 	{
 		if ((check_interactive(info) || get_environment_variable(info, "PATH=")
-			|| info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
+			|| info->argv[0][0] == '/') && is_executable(info, info->argv[0]))
 			fork_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
