@@ -7,7 +7,7 @@
  *
  * Returns: 0 on success, 1 on error.
  */
-int start_program(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	info_t info[] = { INFO_INIT };
 	int fd = 2;
