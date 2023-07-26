@@ -1,14 +1,13 @@
 #include "shell.h"
 
 /**
- * hsh - main shell loop
- *
- * The main loop that interacts with the user and executes commands.
- *
- * @info: The parameter & return info struct.
+ * hsh - The main shell loop.
+ * @info: Pointer to the parameter and return info struct.
  * @av: The argument vector from main().
  *
- * Return: 0 on success, 1 on error, or error code.
+ * This function runs the main loop of the shell.
+ *
+ * Return: 0 on success, 1 on error, or an error code.
  */
 int hsh(info_t *info, char **av)
 {
@@ -17,11 +16,11 @@ int hsh(info_t *info, char **av)
 
 	while (r != -1 && builtin_ret != -2)
 	{
-		initialize_info(info);
-		if (check_interactive(info))
-			print_string("$ ");
-		write_character(BUF_FLUSH);
-		r = get_user_input(info);
+		clear_info(info);
+		if (interactive(info))
+			_puts("$ ");
+		_eputchar(BUF_FLUSH);
+		r = get_input(info);
 		if (r != -1)
 		{
 			set_info(info, av);
@@ -29,13 +28,13 @@ int hsh(info_t *info, char **av)
 			if (builtin_ret == -1)
 				find_cmd(info);
 		}
-		else if (check_interactive(info))
-			write_character('\n');
+		else if (interactive(info))
+			_putchar('\n');
 		free_info(info, 0);
 	}
 	write_history(info);
 	free_info(info, 1);
-	if (!check_interactive(info) && info->status)
+	if (!interactive(info) && info->status)
 		exit(info->status);
 	if (builtin_ret == -2)
 	{
@@ -47,34 +46,33 @@ int hsh(info_t *info, char **av)
 }
 
 /**
- * find_builtin - finds a builtin command
+ * find_builtin - Find a builtin command.
+ * @info: Pointer to the parameter & return info struct.
  *
- * Search for a builtin command in the command table and execute it if found.
- *
- * @info: The parameter & return info struct.
+ * This function finds and executes a builtin command if present.
  *
  * Return: -1 if builtin not found,
  *         0 if builtin executed successfully,
  *         1 if builtin found but not successful,
- *         -2 if builtin signals exit().
+ *         2 if builtin signals exit().
  */
 int find_builtin(info_t *info)
 {
 	int i, built_in_ret = -1;
 	builtin_table builtintbl[] = {
 		{"exit", _myexit},
-		{"env", print_environment},
+		{"env", _myenv},
 		{"help", _myhelp},
-		{"history", display_history},
-		{"setenv", set_environment_variable},
-		{"unsetenv", unset_environment_variable},
+		{"history", _myhistory},
+		{"setenv", _mysetenv},
+		{"unsetenv", _myunsetenv},
 		{"cd", _mycd},
-		{"alias", manage_alias},
+		{"alias", _myalias},
 		{NULL, NULL}
 	};
 
 	for (i = 0; builtintbl[i].type; i++)
-		if (str_compare(info->argv[0], builtintbl[i].type) == 0)
+		if (_strcmp(info->argv[0], builtintbl[i].type) == 0)
 		{
 			info->line_count++;
 			built_in_ret = builtintbl[i].func(info);
@@ -84,11 +82,10 @@ int find_builtin(info_t *info)
 }
 
 /**
- * find_cmd - finds a command in PATH
+ * find_cmd - Find a command in PATH.
+ * @info: Pointer to the parameter & return info struct.
  *
- * Search for a command in the system's PATH and execute it if found.
- *
- * @info: The parameter & return info struct.
+ * This function attempts to find a command in the PATH environment variable.
  *
  * Return: void.
  */
@@ -104,13 +101,12 @@ void find_cmd(info_t *info)
 		info->linecount_flag = 0;
 	}
 	for (i = 0, k = 0; info->arg[i]; i++)
-		if (!check_delimiter(info->arg[i], " \t\n"))
+		if (!is_delim(info->arg[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = find_cmd_in_path(info, get_environment_variable(info, "PATH="),
-			info->argv[0]);
+	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
 	if (path)
 	{
 		info->path = path;
@@ -118,8 +114,8 @@ void find_cmd(info_t *info)
 	}
 	else
 	{
-		if ((check_interactive(info) || get_environment_variable(info, "PATH=")
-			|| info->argv[0][0] == '/') && is_executable(info, info->argv[0]))
+		if ((interactive(info) || _getenv(info, "PATH=")
+					|| info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
 			fork_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
@@ -130,11 +126,10 @@ void find_cmd(info_t *info)
 }
 
 /**
- * fork_cmd - forks a an exec thread to run cmd
+ * fork_cmd - Fork a child process to execute a command.
+ * @info: Pointer to the parameter & return info struct.
  *
- * Create a new process to execute the command.
- *
- * @info: The parameter & return info struct.
+ * This function forks a child process to execute the command.
  *
  * Return: void.
  */

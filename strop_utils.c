@@ -1,32 +1,39 @@
 #include "shell.h"
 
 /**
- * str_length - Calculate the length of a string.
- * @s: The string to calculate the length for.
+ * _strlen - returns the length of a string
+ * @s: the string whose length to check
  *
- * Return: The length of the string as an integer.
+ *	Description: This function calculates the length of a string by iterating
+ *	through the characters until the null terminator is encountered.
+ *
+ * Return: integer length of the string
  */
-int str_length(char *s)
+int _strlen(char *s)
 {
-	int length = 0;
+	int i = 0;
 
 	if (!s)
 		return (0);
 
 	while (*s++)
-		length++;
-	return (length);
+		i++;
+	return (i);
 }
 
 /**
- * str_compare - Compare two strings lexicographically.
- * @s1: The first string to compare.
- * @s2: The second string to compare.
+ * _strcmp - performs lexicographic comparison of two strings.
+ * @s1: the first string
+ * @s2: the second string
  *
- * Return: A negative value if s1 < s2,
- *	a positive value if s1 > s2, or 0 if s1 == s2.
+ *	Description: This function compares two strings lexicographically by
+ *	comparing each character. It returns an integer value less than, equal to,
+ *	or greater than zero if s1 is found to be less than, equal to, or greater
+ *	than s2, respectively.
+ *
+ * Return: negative if s1 < s2, positive if s1 > s2, zero if s1 == s2
  */
-int str_compare(char *s1, char *s2)
+int _strcmp(char *s1, char *s2)
 {
 	while (*s1 && *s2)
 	{
@@ -42,14 +49,17 @@ int str_compare(char *s1, char *s2)
 }
 
 /**
- * str_starts_with - Check if a string starts with a specific substring.
- * @haystack: The string to search within.
- * @needle: The substring to find at the beginning of the haystack.
+ * starts_with - checks if needle starts with haystack
+ * @haystack: string to search
+ * @needle: the substring to find
  *
- * Return: A pointer to the next character in haystack after the needle,
- *	or NULL if not found.
+ *	Description: This function checks if the string needle starts with the
+ *	string haystack. It returns the address of the next character in haystack
+ *	after the matched portion or NULL if there is no match.
+ *
+ * Return: address of next char of haystack or NULL
  */
-char *str_starts_with(const char *haystack, const char *needle)
+char *starts_with(const char *haystack, const char *needle)
 {
 	while (*needle)
 		if (*needle++ != *haystack++)
@@ -58,20 +68,24 @@ char *str_starts_with(const char *haystack, const char *needle)
 }
 
 /**
- * str_concatenate - Concatenate two strings.
- * @dest: The destination buffer to hold the concatenated string.
- * @src: The source buffer to append to the destination.
+ * _strcat - concatenates two strings
+ * @dest: the destination buffer
+ * @src: the source buffer
  *
- * Return: A pointer to the destination buffer.
+ *	Description: This function concatenates the string src to the end of the
+ *	string dest. The destination buffer must have enough space to hold the
+ *	concatenated string.
+ *
+ * Return: pointer to destination buffer
  */
-char *str_concatenate(char *dest, char *src)
+char *_strcat(char *dest, char *src)
 {
-	char *result = dest;
+	char *ret = dest;
 
 	while (*dest)
 		dest++;
 	while (*src)
 		*dest++ = *src++;
 	*dest = *src;
-	return (result);
+	return (ret);
 }

@@ -1,14 +1,13 @@
 #include "shell.h"
 
 /**
- * is_executable - Checks if a file is an executable command.
- *
+ * is_cmd - Checks if a file is an executable command.
  * @info: Pointer to the info struct.
  * @path: Path to the file.
  *
  * Return: 1 if the file is an executable command, 0 otherwise.
  */
-int is_executable(info_t *info, char *path)
+int is_cmd(info_t *info, char *path)
 {
 	struct stat st;
 
@@ -24,15 +23,14 @@ int is_executable(info_t *info, char *path)
 }
 
 /**
- * duplicate_substring - Duplicates characters from a given substring.
- *
+ * dup_chars - Duplicates characters from a given string.
  * @pathstr: The original PATH string.
- * @start: The starting index of the substring.
- * @stop: The stopping index of the substring.
+ * @start: Starting index of the characters to duplicate.
+ * @stop: Stopping index (exclusive) of the characters to duplicate.
  *
- * Return: Pointer to the new buffer containing the duplicated substring.
+ * Return: Pointer to the new buffer containing the duplicated characters.
  */
-char *duplicate_substring(char *pathstr, int start, int stop)
+char *dup_chars(char *pathstr, int start, int stop)
 {
 	static char buf[1024];
 	int i = 0, k = 0;
@@ -45,41 +43,38 @@ char *duplicate_substring(char *pathstr, int start, int stop)
 }
 
 /**
- * find_cmd_in_path - Finds the full path of a command in the PATH string.
- *
+ * find_path - Finds the specified command in the given PATH string.
  * @info: Pointer to the info struct.
- * @pathstr: The PATH string containing directories separated by ':'.
+ * @pathstr: The PATH string.
  * @cmd: The command to find.
  *
- * Return: The full path of the command if found, or NULL if not found.
+ * Return: Full path of the command if found, or NULL if not found.
  */
-char *find_cmd_in_path(info_t *info, char *pathstr, char *cmd)
+char *find_path(info_t *info, char *pathstr, char *cmd)
 {
 	int i = 0, curr_pos = 0;
 	char *path;
 
 	if (!pathstr)
 		return (NULL);
-
-	if ((str_length(cmd) > 2) && str_starts_with(cmd, "./"))
+	if ((_strlen(cmd) > 2) && starts_with(cmd, "./"))
 	{
-		if (is_executable(info, cmd))
+		if (is_cmd(info, cmd))
 			return (cmd);
 	}
-
 	while (1)
 	{
 		if (!pathstr[i] || pathstr[i] == ':')
 		{
-			path = duplicate_substring(pathstr, curr_pos, i);
+			path = dup_chars(pathstr, curr_pos, i);
 			if (!*path)
-				str_concatenate(path, cmd);
+				_strcat(path, cmd);
 			else
 			{
-				str_concatenate(path, "/");
-				str_concatenate(path, cmd);
+				_strcat(path, "/");
+				_strcat(path, cmd);
 			}
-			if (is_executable(info, path))
+			if (is_cmd(info, path))
 				return (path);
 			if (!pathstr[i])
 				break;

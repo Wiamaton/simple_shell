@@ -1,9 +1,10 @@
 #include "shell.h"
 
 /**
- * get_environ - Retrieves a copy of the environment strings array.
- * @info: Pointer to the structure containing potential arguments.
- * Return: Pointer to the string array.
+ * get_environ - Returns a copy of the string array 'environ'.
+ * @info: Pointer to a structure containing potential arguments.
+ *	Used to maintain constant function prototype.
+ * Return: A pointer to the string array 'environ'.
  */
 char **get_environ(info_t *info)
 {
@@ -18,9 +19,10 @@ char **get_environ(info_t *info)
 
 /**
  * _unsetenv - Removes an environment variable.
- * @info: Pointer to the structure containing potential arguments.
- * @var: Pointer to the string representing the environment variable.
- * Return: 1 if the variable is deleted, 0 otherwise.
+ * @info: Pointer to a structure containing potential arguments.
+ *	Used to maintain constant function prototype.
+ * @var: The name of the environment variable to be removed.
+ * Return: 1 on successful deletion, 0 otherwise.
  */
 int _unsetenv(info_t *info, char *var)
 {
@@ -33,7 +35,7 @@ int _unsetenv(info_t *info, char *var)
 
 	while (node)
 	{
-		p = str_starts_with(node->str, var);
+		p = starts_with(node->str, var);
 		if (p && *p == '=')
 		{
 			info->env_changed = delete_node_at_index(&(info->env), i);
@@ -48,12 +50,13 @@ int _unsetenv(info_t *info, char *var)
 }
 
 /**
- * _setenv - Initializes a new environment variable or modifies
- *	an existing one.
- * @info: Pointer to the structure containing potential arguments.
- * @var: Pointer to the string representing the environment variable name.
- * @value: Pointer to the string representing the environment variable value.
- * Return: Always 0.
+ * _setenv - Initializes a new environment
+ *	variable or modifies an existing one.
+ * @info: Pointer to a structure containing potential arguments.
+ *	Used to maintain constant function prototype.
+ * @var: The name of the environment variable.
+ * @value: The value to be assigned to the environment variable.
+ * Return: Always returns 0.
  */
 int _setenv(info_t *info, char *var, char *value)
 {
@@ -64,16 +67,16 @@ int _setenv(info_t *info, char *var, char *value)
 	if (!var || !value)
 		return (0);
 
-	buf = malloc(str_length(var) + str_length(value) + 2);
+	buf = malloc(_strlen(var) + _strlen(value) + 2);
 	if (!buf)
 		return (1);
-	copy_string(buf, var);
-	str_concatenate(buf, "=");
-	str_concatenate(buf, value);
+	_strcpy(buf, var);
+	_strcat(buf, "=");
+	_strcat(buf, value);
 	node = info->env;
 	while (node)
 	{
-		p = str_starts_with(node->str, var);
+		p = starts_with(node->str, var);
 		if (p && *p == '=')
 		{
 			free(node->str);

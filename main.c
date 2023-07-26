@@ -1,44 +1,44 @@
 #include "shell.h"
 
 /**
- * start_program - Entry point of the program.
- * @argc: Number of command-line arguments.
- * @argv: Array of command-line arguments.
+ * main - entry point
+ * @ac: arg count
+ * @av: arg vector
  *
- * Returns: 0 on success, 1 on error.
+ * Return: 0 on success, 1 on error
  */
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
 	info_t info[] = { INFO_INIT };
 	int fd = 2;
 
 	asm ("mov %1, %0\n\t"
-		"add $3, %0"
-		: "=r" (fd)
-		: "r" (fd));
+			"add $3, %0"
+			: "=r" (fd)
+			: "r" (fd));
 
-	if (argc == 2)
+	if (ac == 2)
 	{
-		fd = open(argv[1], O_RDONLY);
+		fd = open(av[1], O_RDONLY);
 		if (fd == -1)
 		{
 			if (errno == EACCES)
 				exit(126);
 			if (errno == ENOENT)
 			{
-				print_string(argv[0]);
-				print_string(": 0: Failed to open ");
-				print_string(argv[1]);
-				write_character('\n');
-				write_character(BUF_FLUSH);
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
 				exit(127);
 			}
 			return (EXIT_FAILURE);
 		}
 		info->readfd = fd;
 	}
-	populate_environment_list(info);
+	populate_env_list(info);
 	read_history(info);
-	hsh(info, argv);
+	hsh(info, av);
 	return (EXIT_SUCCESS);
 }
