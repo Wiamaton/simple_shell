@@ -87,6 +87,13 @@ typedef struct builtin
 } builtin_table;
 
 /* Function prototypes */
+void print_error(info_t *, const char *);
+char *find_cmd_in_path(info_t *, char *, char *);
+char **get_environ(info_t *);
+int display_history(info_t *);
+int set_environment_variable(info_t *);
+int unset_environment_variable(info_t *);
+int manage_alias(info_t *);
 
 /* toem_shloop.c */
 int hsh(info_t *, char **);
