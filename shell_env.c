@@ -1,12 +1,12 @@
 #include "shell.h"
 
 /**
- * _myenv - Prints the current Environment.
+ * _env - Prints the current Environment.
  * @info: Structure containing potential arguments. Used to maintain
  *         a constant function prototype.
  * Return: Always 0.
  */
-int _myenv(info_t *info)
+int _env(param_t *info)
 {
 	print_list_str(info->env);
 	return (0);
@@ -20,7 +20,7 @@ int _myenv(info_t *info)
  *
  * Return: The value of the environment variable or NULL if not found.
  */
-char *_getenv(info_t *info, const char *name)
+char *_getenv(param_t *info, const char *name)
 {
 	list_t *node = info->env;
 	char *p;
@@ -42,7 +42,7 @@ char *_getenv(info_t *info, const char *name)
  *        a constant function prototype.
  * Return: Always 0.
  */
-int _mysetenv(info_t *info)
+int _mysetenv(param_t *info)
 {
 	if (info->argc != 3)
 	{
@@ -60,7 +60,7 @@ int _mysetenv(info_t *info)
  *        a constant function prototype.
  * Return: Always 0.
  */
-int _myunsetenv(info_t *info)
+int _myunsetenv(param_t *info)
 {
 	int i;
 
@@ -81,7 +81,7 @@ int _myunsetenv(info_t *info)
  *          a constant function prototype.
  * Return: Always 0.
  */
-int populate_env_list(info_t *info)
+int populate_env_list(param_t *info)
 {
 	list_t *node = NULL;
 	size_t i;

@@ -78,14 +78,14 @@ int _putchar(char c)
 {
 	/* Function to write a character to stdout */
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[BUF_WRITE_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == BUFFER_FLUSH || i >= BUF_WRITE_SIZE)
 	{
 		write(1, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c != BUFFER_FLUSH)
 		buf[i++] = c;
 	return (1);
 }

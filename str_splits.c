@@ -1,14 +1,14 @@
 #include "shell.h"
 
 /**
- * **strtow - Splits a string into words based on
+ * **_strtok - Splits a string into words based on
  *		the provided delimiter string.
  * @str: The input string to be split.
  * @d: The delimiter string used to split the input string.
  *
  * Return: A pointer to an array of strings (words), or NULL on failure.
  */
-char **strtow(char *str, char *d)
+char **_strtok(char *str, char *d)
 {
 	int i, j, k, m, numwords = 0;
 	char **s;
@@ -50,14 +50,14 @@ char **strtow(char *str, char *d)
 }
 
 /**
- * **strtow2 - Splits a string into words based on
+ * **_strtok2 - Splits a string into words based on
  *		a single character delimiter.
  * @str: The input string to be split.
  * @d: The delimiter character used to split the input string.
  *
  * Return: A pointer to an array of strings (words), or NULL on failure.
  */
-char **strtow2(char *str, char d)
+char **_strtok2(char *str, char d)
 {
 	int i, j, k, m, numwords = 0;
 	char **s;

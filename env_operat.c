@@ -6,7 +6,7 @@
  *	Used to maintain constant function prototype.
  * Return: A pointer to the string array 'environ'.
  */
-char **get_environ(info_t *info)
+char **get_environ(param_t *info)
 {
 	if (!info->environ || info->env_changed)
 	{
@@ -24,7 +24,7 @@ char **get_environ(info_t *info)
  * @var: The name of the environment variable to be removed.
  * Return: 1 on successful deletion, 0 otherwise.
  */
-int _unsetenv(info_t *info, char *var)
+int _unsetenv(param_t *info, char *var)
 {
 	list_t *node = info->env;
 	size_t i = 0;
@@ -58,7 +58,7 @@ int _unsetenv(info_t *info, char *var)
  * @value: The value to be assigned to the environment variable.
  * Return: Always returns 0.
  */
-int _setenv(info_t *info, char *var, char *value)
+int _setenv(param_t *info, char *var, char *value)
 {
 	char *buf = NULL;
 	list_t *node;

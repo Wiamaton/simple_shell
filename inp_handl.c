@@ -8,7 +8,7 @@
  *
  * Return: Number of bytes read.
  */
-ssize_t input_buf(info_t *info, char **buf, size_t *len)
+ssize_t input_buf(param_t *info, char **buf, size_t *len)
 {
 	ssize_t r = 0;
 	size_t len_p = 0;
@@ -20,7 +20,7 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 		*buf = NULL;
 		signal(SIGINT, sigintHandler);
 
-#if USE_GETLINE
+#if GETLINE
 		r = getline(buf, &len_p, stdin);
 #else
 		r = _getline(info, buf, &len_p);
@@ -34,7 +34,7 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 				r--;
 			}
 			info->linecount_flag = 1;
-			remove_comments(*buf);
+			del_comments(*buf);
 			build_history_list(info, *buf, info->histcount++);
 			/* if (_strchr(*buf, ';')) Is this a command chain? */
 			{
@@ -52,14 +52,14 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
  *
  * Return: Number of bytes read.
  */
-ssize_t get_input(info_t *info)
+ssize_t get_input(param_t *info)
 {
 	static char *buf; /* The ';' command chain buffer. */
 	static size_t i, j, len;
 	ssize_t r = 0;
 	char **buf_p = &(info->arg), *p;
 
-	_putchar(BUF_FLUSH);
+	_putchar(BUFFER_FLUSH);
 	r = input_buf(info, &buf, &len);
 	if (r == -1) /* EOF */
 		return (-1);
@@ -80,7 +80,7 @@ ssize_t get_input(info_t *info)
 		if (i >= len) /* Reached the end of the buffer? */
 		{
 			i = len = 0; /* Reset position and length. */
-			info->cmd_buf_type = CMD_NORM;
+			info->cmd_buf_type = NORMAL_CMD;
 		}
 
 		*buf_p = p; /* Pass back the pointer to the current command position. */
@@ -99,13 +99,13 @@ ssize_t get_input(info_t *info)
  *
  * Return: Number of bytes read.
  */
-ssize_t read_buf(info_t *info, char *buf, size_t *i)
+ssize_t read_buf(param_t *info, char *buf, size_t *i)
 {
 	ssize_t r = 0;
 
 	if (*i)
 		return (0);
-	r = read(info->readfd, buf, READ_BUF_SIZE);
+	r = read(info->readfd, buf, BUF_READ_SIZE);
 	if (r >= 0)
 		*i = r;
 	return (r);
@@ -119,9 +119,9 @@ ssize_t read_buf(info_t *info, char *buf, size_t *i)
  *
  * Return: Number of bytes read.
  */
-int _getline(info_t *info, char **ptr, size_t *length)
+int _getline(param_t *info, char **ptr, size_t *length)
 {
-	static char buf[READ_BUF_SIZE];
+	static char buf[BUF_READ_SIZE];
 	static size_t i, len;
 	size_t k;
 	ssize_t r = 0, s = 0;
@@ -168,5 +168,5 @@ void sigintHandler(__attribute__((unused)) int sig_num)
 {
 	_puts("\n");
 	_puts("$ ");
-	_putchar(BUF_FLUSH);
+	_putchar(BUFFER_FLUSH);
 }

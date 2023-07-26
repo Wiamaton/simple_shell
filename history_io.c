@@ -7,20 +7,20 @@
  * Return: Allocated string containing the history file path,
  *		or NULL on failure.
  */
-char *get_history_file(info_t *info)
+char *get_history_file(param_t *info)
 {
 	char *buf, *dir;
 
 	dir = _getenv(info, "HOME=");
 	if (!dir)
 		return (NULL);
-	buf = malloc(sizeof(char) * (_strlen(dir) + _strlen(HIST_FILE) + 2));
+	buf = malloc(sizeof(char) * (_strlen(dir) + _strlen(HISTORY_FILE) + 2));
 	if (!buf)
 		return (NULL);
 	buf[0] = 0;
 	_strcpy(buf, dir);
 	_strcat(buf, "/");
-	_strcat(buf, HIST_FILE);
+	_strcat(buf, HISTORY_FILE);
 	return (buf);
 }
 
@@ -30,7 +30,7 @@ char *get_history_file(info_t *info)
  *
  * Return: Returns 1 on success, else -1 on failure.
  */
-int write_history(info_t *info)
+int write_history(param_t *info)
 {
 	ssize_t fd;
 	char *filename = get_history_file(info);
@@ -48,7 +48,7 @@ int write_history(info_t *info)
 		_putsfd(node->str, fd);
 		_putfd('\n', fd);
 	}
-	_putfd(BUF_FLUSH, fd);
+	_putfd(BUFFER_FLUSH, fd);
 	close(fd);
 	return (1);
 }
@@ -60,7 +60,7 @@ int write_history(info_t *info)
  * Return: Returns the number of history entries
  *	(histcount) on success, 0 otherwise.
  */
-int read_history(info_t *info)
+int read_history(param_t *info)
 {
 	int i, last = 0, linecount = 0;
 	ssize_t fd, rdlen, fsize = 0;
@@ -97,7 +97,7 @@ int read_history(info_t *info)
 		build_history_list(info, buf + last, linecount++);
 	free(buf);
 	info->histcount = linecount;
-	while (info->histcount-- >= HIST_MAX)
+	while (info->histcount-- >= HISTORY_MAX)
 		delete_node_at_index(&(info->history), 0);
 	renumber_history(info);
 	return (info->histcount);
@@ -112,7 +112,7 @@ int read_history(info_t *info)
  *
  * Return: Always 0.
  */
-int build_history_list(info_t *info, char *buf, int linecount)
+int build_history_list(param_t *info, char *buf, int linecount)
 {
 	list_t *node = NULL;
 
@@ -132,7 +132,7 @@ int build_history_list(info_t *info, char *buf, int linecount)
  *
  * Return: Returns the new histcount.
  */
-int renumber_history(info_t *info)
+int renumber_history(param_t *info)
 {
 	list_t *node = info->history;
 	int i = 0;

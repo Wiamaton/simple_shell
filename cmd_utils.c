@@ -7,7 +7,7 @@
  *
  * Return: 1 if the file is an executable command, 0 otherwise.
  */
-int is_cmd(info_t *info, char *path)
+int is_cmd(param_t *info, char *path)
 {
 	struct stat st;
 
@@ -50,7 +50,7 @@ char *dup_chars(char *pathstr, int start, int stop)
  *
  * Return: Full path of the command if found, or NULL if not found.
  */
-char *find_path(info_t *info, char *pathstr, char *cmd)
+char *find_path(param_t *info, char *pathstr, char *cmd)
 {
 	int i = 0, curr_pos = 0;
 	char *path;

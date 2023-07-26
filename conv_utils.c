@@ -29,11 +29,11 @@ int _erratoi(char *s)
 }
 
 /**
- * print_error - Prints an error message to standard error.
+ * _perror - Prints an error message to standard error.
  * @info: A pointer to the parameter & return info struct.
  * @estr: A string containing the specified error type.
  */
-void print_error(info_t *info, char *estr)
+void _perror(param_t *info, char *estr)
 {
 	_eputs(info->fname);
 	_eputs(": ");
@@ -86,14 +86,14 @@ int print_d(int input, int fd)
 }
 
 /**
- * convert_number - Converter function, a clone of itoa.
+ * convert_num_to_str - Converter function, a clone of itoa.
  * @num: The number to be converted.
  * @base: The base for conversion.
  * @flags: Argument flags.
  *
  * Return: The converted string.
  */
-char *convert_number(long int num, int base, int flags)
+char *convert_num_to_str(long int num, int base, int flags)
 {
 	static char *array;
 	static char buffer[50];
@@ -107,7 +107,7 @@ char *convert_number(long int num, int base, int flags)
 		sign = '-';
 	}
 
-	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	array = flags & CONVERT_LC ? "0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buffer[49];
 	*ptr = '\0';
 
@@ -122,12 +122,12 @@ char *convert_number(long int num, int base, int flags)
 }
 
 /**
- * remove_comments - Replaces the first instance of '#' with '\0'.
+ * del_comments - Replaces the first instance of '#' with '\0'.
  * @buf: The address of the string to modify.
  *
  * Return: Always 0.
  */
-void remove_comments(char *buf)
+void del_comments(char *buf)
 {
 	int i;
 
