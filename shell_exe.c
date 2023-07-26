@@ -60,7 +60,7 @@ int find_builtin(param_t *info)
 {
 	int i, built_in_ret = -1;
 	builtin_t builtintbl[] = {
-		{"exit", _exit},
+		{"exit", _myexit},
 		{"env", _env},
 		{"help", _help},
 		{"history", _history},
