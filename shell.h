@@ -174,7 +174,7 @@ char *convert_num_to_str(long int, int, int);
 void del_comments(char *);
 
 /* toem_builtin.c */
-int _exit(param_t *);
+int _myexit(param_t *);
 int change_dir(param_t *);
 int _help(param_t *);
 
